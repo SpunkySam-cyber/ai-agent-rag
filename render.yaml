@@ -7,7 +7,7 @@ services:
     name: ai-agent-app
     runtime: node
     plan: free
-    buildCommand: npm ci && npm run build   # ✅ INSTALL deps THEN build
+    buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /
     envVars:
@@ -17,5 +17,3 @@ services:
         fromDatabase:
           name: ai-agent-db
           property: connectionString
-      - key: PYTHON_PATH
-        value: python3
