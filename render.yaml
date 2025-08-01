@@ -3,12 +3,11 @@ databases:
     plan: free
 
 services:
-  # Web Service
   - type: web
     name: ai-agent-app
     runtime: node
     plan: free
-    buildCommand: npm ci && ./build.sh
+    buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /
     envVars:
