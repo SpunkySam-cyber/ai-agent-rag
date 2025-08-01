@@ -1,11 +1,8 @@
-services:
-  # PostgreSQL Database
-  - type: pserv
-    name: ai-agent-db
+databases:
+  - name: ai-agent-db
     plan: free
-    databaseName: ai_agent
-    user: ai_agent
 
+services:
   # Web Service
   - type: web
     name: ai-agent-app
