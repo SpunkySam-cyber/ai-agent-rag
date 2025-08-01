@@ -1,0 +1,61 @@
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
+import torch
+
+class HybridChatbotTool:
+    def __init__(self):
+        # ---- Load FLAN-T5 for factual Q&A ----
+        print("Loading FLAN-T5 for factual responses...")
+        flan_model_name = 'google/flan-t5-base'
+        self.flan_tokenizer = AutoTokenizer.from_pretrained(flan_model_name)
+        self.flan_model = AutoModelForSeq2SeqLM.from_pretrained(flan_model_name)
+        self.flan_pipeline = pipeline(
+            "text2text-generation",
+            model=self.flan_model,
+            tokenizer=self.flan_tokenizer
+        )
+
+        # ---- Load BlenderBot for casual chat ----
+        print("Loading BlenderBot for casual conversations...")
+        blender_model_name = "facebook/blenderbot-400M-distill"
+        self.blender_tokenizer = AutoTokenizer.from_pretrained(blender_model_name)
+        self.blender_model = AutoModelForSeq2SeqLM.from_pretrained(blender_model_name)
+        self.blender_pipeline = pipeline(
+            "text2text-generation",
+            model=self.blender_model,
+            tokenizer=self.blender_tokenizer
+        )
+
+    def _is_factual_questions(self, text: str) -> bool:
+        """Decide if the input looks like a factual query"""
+        text_lower = text.lower().strip()
+        return text_lower.startswith(("what", "how", "when", "where", "why"))
+
+    def _flan_answer(self, user_input: str) -> str:
+        """Use FLAN-T5 for factual Q&A"""
+        result = self.flan_pipeline(user_input, max_new_tokens=128, truncation=True)
+        return result[0]["generated_text"]
+
+    def _blender_chat(self, user_input: str) -> str:
+        """Use BlenderBot for casual conversation"""
+        if not user_input.strip():
+            return "Please type something."
+        response = self.blender_pipeline(user_input, max_new_tokens=100)
+        return response[0]["generated_text"].strip()
+
+    def chat(self, user_input: str) -> str:
+        """Decide which model to use"""
+        if self._is_factual_questions(user_input):
+            return self._flan_answer(user_input)
+        else:
+            return self._blender_chat(user_input)
+
+    def reset_history(self):
+        # BlenderBot pipeline doesn't maintain history by default
+        pass
+
+
+# Instantiate globally
+_chatbot = HybridChatbotTool()
+
+def chatbot_response(query: str) -> str:
+    return _chatbot.chat(query)

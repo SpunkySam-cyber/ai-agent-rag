@@ -1,0 +1,73 @@
+Got it! Here's a complete and precise description of your **current project state**, suitable for sharing with other developers or LLMs for future help or collaboration:
+
+---
+
+## 🧠 Project Title: **Hybrid Task-Oriented AI Agent (with Tool-Use)**
+
+### 📌 Overview
+
+This is a **locally running AI Agent** built in Python that intelligently routes user queries to the appropriate tool. It supports document summarization, web search, question answering, and a hybrid chatbot that can handle both factual and casual conversations using lightweight, open-source models.
+
+---
+
+### ✅ Current Functionalities
+
+1. **Tool-Based Query Routing**
+
+   * The agent parses the user's input and decides which tool to invoke:
+
+     * `summarizer`: Summarizes uploaded `.txt` or `.pdf` documents using a prompt-based summarization function.
+     * `web_search`: Performs a basic internet search (summarized or raw), using pre-built logic with placeholder/mock scraping.
+     * `qa_model`: Answers questions based on the content provided in the "context" box using a QA model.
+     * `chatbot`: Falls back to a hybrid chatbot (see below) if no specific tool fits.
+
+2. **Hybrid Chatbot Tool**
+
+   * **Factual Questions**: Routed to a lightweight model (`google/flan-t5-base` or `flan-t5-large`) for concise answers.
+   * **Casual Conversations**: Routed to `microsoft/DialoGPT-medium`, with prompt engineering to simulate a friendly assistant.
+   * Simple logic detects factual vs. casual inputs based on keywords (`what`, `why`, `how`, etc.).
+
+3. **Gradio-Based Local Interface**
+
+   * Users can:
+
+     * Upload `.txt` or `.pdf` files
+     * View auto-extracted file content in a context box
+     * Enter natural language queries for any of the agent's tools
+     * Trigger chatbot responses directly using a 💬 button
+
+---
+
+### 🧰 Tech Stack
+
+* **Python** (core logic)
+* **Hugging Face Transformers**
+
+  * `flan-t5-base` / `DialoGPT-medium` for chatbot
+  * `distilbert-base-uncased` for question answering
+* **Gradio** (for interactive UI)
+* **PyMuPDF / pdfplumber** (for PDF text extraction)
+* **Custom pipeline logic** for routing inputs to appropriate tools
+
+---
+
+### ⚠️ Current Limitations
+
+* No memory-based context management or persistent chat sessions
+* RAG (Retrieval-Augmented Generation) is not yet implemented
+* Deployment is local only — not yet deployed on any cloud/VPS
+* Factual LLM (FLAN-T5) occasionally gives hallucinated answers
+* DialoGPT responses are sometimes unnatural or off-topic, especially with vague prompts
+
+---
+
+### 🚧 Planned Next Steps
+
+* Add a **vector store (e.g. FAISS or Chroma)** to support document-based RAG
+* Improve chatbot quality (e.g. better casual model or fine-tuned LLM)
+* Create a **production-ready frontend** with persistent chat threads
+* Enable full deployment (e.g. on Hugging Face Spaces, Render, or a VPS)
+
+---
+
+Let me know if you'd like a one-paragraph short version too.

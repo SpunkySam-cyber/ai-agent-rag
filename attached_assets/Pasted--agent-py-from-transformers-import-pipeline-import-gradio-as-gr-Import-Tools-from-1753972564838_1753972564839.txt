@@ -1,0 +1,83 @@
+# agent.py
+
+from transformers import pipeline
+import gradio as gr
+
+# --- Import Tools ---
+from tools.web_search_tool2 import web_search
+from tools.file_reader_tool import read_file
+from summarizer_advanced import summarize_text_advanced
+from tools.qa_model import answer_question
+from tools.chatbot_tool2 import chatbot_response  # Hybrid chatbot
+
+# --- Main Agent Logic ---
+def agent_response(context, query):
+    query_clean = query.strip()
+
+    # 1. Summarization
+    if query_clean.lower().startswith("summarize"):
+        summary = summarize_text_advanced(context, prompt=query_clean)
+        return f"Summary:\n{summary}"
+
+    # 2. Web Search
+    elif query_clean.lower().startswith("search"):
+        search_query = query_clean[len("search"):].strip()
+        summarize = True
+        if search_query.startswith("raw"):
+            summarize = False
+            search_query = search_query[len("raw"):].strip()
+
+        results = web_search(search_query, summarize=summarize)
+        return f"Search Results:\n{results}"
+
+    # 3. QA (Factual Question Answering)
+    elif (
+        query_clean.endswith("?")
+        or any(q in query_clean.lower() for q in ["what", "why", "how", "who", "when", "where"])
+    ):
+        try:
+            result = answer_question(context, query_clean)
+            return f"Answer:\n{result}"
+        except Exception as e:
+            return f"QA Error: {str(e)}"
+
+    # 4. Default → Chatbot
+    else:
+        return chatbot_response(query_clean)
+
+# --- File Loader ---
+def load_file(file):
+    if file is None:
+        return ""
+    return read_file(file.name)
+
+# --- Gradio UI ---
+with gr.Blocks(title="LangChain-Style Agent", css=".gr-box {border-radius: 12px;}") as iface:
+    gr.Markdown("""
+    # 🧠 LangChain-Style Agent  
+    ⚡ Ask questions, summarize documents, search the web — or chat casually!  
+    Upload a file or enter your own context, then type your query.
+    """)
+
+    with gr.Row():
+        with gr.Column(scale=1):
+            file_input = gr.File(label="📎 Upload .txt or .pdf", file_types=[".txt", ".pdf"], type="filepath")
+            load_btn = gr.Button("📥 Load File Content", variant="primary")
+        with gr.Column(scale=2):
+            context_box = gr.Textbox(label="📝 Context", lines=12, interactive=True)
+
+    with gr.Row():
+        query_box = gr.Textbox(
+            label="🔍 Your Query",
+            placeholder="Examples: 'Summarize...', 'Search...', 'What is...', or 'Hi!'",
+            lines=2,
+        )
+    output = gr.Textbox(label="💡 Agent Response", lines=12, interactive=False)
+
+    # Button actions
+    load_btn.click(fn=load_file, inputs=file_input, outputs=context_box)
+    query_box.submit(fn=agent_response, inputs=[context_box, query_box], outputs=output)
+
+# --- Run App ---
+if __name__ == "__main__":
+    iface.launch()

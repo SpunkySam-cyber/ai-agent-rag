@@ -1,0 +1,85 @@
+from ddgs import DDGS
+import requests
+from bs4 import BeautifulSoup
+from readability import Document
+from transformers import pipeline
+import re
+
+# Initialize the summarization pipeline
+summarizer = pipeline("summarization", model="google/flan-t5-large", tokenizer="google/flan-t5-large")
+
+# Junk domains to skip (commonly not useful for summarization)
+BLOCKED_DOMAINS = ["tiktok.com", "pinterest.com", "facebook.com", "instagram.com", "youtube.com"]
+
+def clean_text(text: str) -> str:
+    """Normalize whitespace in the text"""
+    return re.sub(r'\s+', ' ', text).strip()
+
+def extract_main_text_from_html(html: str) -> str:
+    """Extract main article text from HTML using readability and BeautifulSoup"""
+    try:
+        doc = Document(html)
+        soup = BeautifulSoup(doc.summary(), "html.parser")
+        paragraphs = soup.find_all("p")
+        main_text = "\n".join(p.get_text() for p in paragraphs[:7])
+        return clean_text(main_text)
+    except Exception as e:
+        return ""
+
+def summarize_text(text: str, max_new_tokens: int = 130) -> str:
+    """Summarize text using Hugging Face summarization pipeline"""
+    try:
+        if not text or len(text.split()) < 5:
+            return "⚠️ Not enough content to summarize."
+
+        summary = summarizer(
+            text,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+        )
+        return summary[0]['summary_text']
+    except Exception as e:
+        return f"⚠️ Error summarizing content: {e}"
+
+def web_search(query: str, summarize: bool = True, max_results: int = 2, max_text_length: int = 1500) -> str:
+    """Search the web and return summarized or raw content from top pages"""
+    with DDGS() as ddgs:
+        results = ddgs.text(query, max_results=max_results)
+        if not results:
+            return "❌ No relevant search results found."
+
+        contents = []
+        seen_urls = set()
+
+        for r in results:
+            url = r['href']
+
+            # Skip duplicates or blocked domains
+            if url in seen_urls or any(domain in url for domain in BLOCKED_DOMAINS):
+                continue
+            seen_urls.add(url)
+
+            try:
+                print(f"🔗 Fetching: {url}")
+                headers = {"User-Agent": "Mozilla/5.0"}
+                response = requests.get(url, headers=headers, timeout=5)
+                html = response.text
+
+                main_text = extract_main_text_from_html(html)
+                if not main_text or len(main_text.split()) < 50:
+                    contents.append(f"From: {url}\n⚠️ Skipped — content too short or empty.\n")
+                    continue
+
+                if len(main_text) > max_text_length:
+                    main_text = main_text[:max_text_length] + "..."
+
+                summary = summarize_text(main_text) if summarize else "🔎 Summarization disabled."
+
+                contents.append(
+                    f"From: {url}\n\n📝 Extracted Content:\n{main_text}\n\n🔍 Summary:\n{summary}"
+                )
+
+            except Exception as e:
+                contents.append(f"From: {url}\n❌ Error fetching content: {e}")
+
+        return "\n\n---\n\n".join(contents) if contents else "❌ No valid content could be fetched."

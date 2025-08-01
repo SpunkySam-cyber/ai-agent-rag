@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(222, 84%, 4.9%);
+  --muted: hsl(210, 40%, 98%);
+  --muted-foreground: hsl(215, 13.8%, 34.1%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 84%, 4.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 84%, 4.9%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --primary: hsl(221, 83%, 53%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222, 47%, 11%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222, 47%, 11%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(222, 84%, 4.9%);
+  --radius: 0.75rem;
+  
+  /* Custom colors matching design */
+  --slate-50: hsl(210, 40%, 98%);
+  --slate-100: hsl(210, 40%, 96%);
+  --slate-200: hsl(214, 32%, 91%);
+  --slate-300: hsl(213, 27%, 84%);
+  --slate-400: hsl(215, 20%, 65%);
+  --slate-500: hsl(215, 16%, 47%);
+  --slate-600: hsl(215, 19%, 35%);
+  --slate-700: hsl(215, 25%, 27%);
+  --slate-800: hsl(217, 33%, 17%);
+  --blue-50: hsl(214, 100%, 97%);
+  --blue-600: hsl(221, 83%, 53%);
+  --blue-700: hsl(224, 76%, 48%);
+  --purple-600: hsl(271, 81%, 56%);
+  --green-400: hsl(142, 76%, 36%);
+}
+
+.dark {
+  --background: hsl(222, 84%, 4.9%);
+  --foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217, 32%, 17%);
+  --muted-foreground: hsl(215, 20%, 65%);
+  --popover: hsl(222, 84%, 4.9%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --card: hsl(222, 84%, 4.9%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --border: hsl(217, 32%, 17%);
+  --input: hsl(217, 32%, 17%);
+  --primary: hsl(221, 83%, 53%);
+  --primary-foreground: hsl(222, 84%, 4.9%);
+  --secondary: hsl(217, 32%, 17%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --accent: hsl(217, 32%, 17%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(212, 95%, 76%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Custom utilities */
+.gradient-brain {
+  background: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(271, 81%, 56%) 100%);
+}
+
+.text-slate-50 { color: hsl(210, 40%, 98%); }
+.text-slate-400 { color: hsl(215, 20%, 65%); }
+.text-slate-500 { color: hsl(215, 16%, 47%); }
+.text-slate-600 { color: hsl(215, 19%, 35%); }
+.text-slate-700 { color: hsl(215, 25%, 27%); }
+.text-slate-800 { color: hsl(217, 33%, 17%); }
+
+.bg-slate-50 { background-color: hsl(210, 40%, 98%); }
+.bg-slate-100 { background-color: hsl(210, 40%, 96%); }
+.bg-slate-200 { background-color: hsl(214, 32%, 91%); }
+
+.border-slate-200 { border-color: hsl(214, 32%, 91%); }
+
+.bg-blue-50 { background-color: hsl(214, 100%, 97%); }
+.text-blue-700 { color: hsl(224, 76%, 48%); }
+.border-blue-200 { border-color: hsl(213, 93%, 88%); }
+
+.hover\:bg-slate-50:hover { background-color: hsl(210, 40%, 98%); }
+.hover\:bg-slate-100:hover { background-color: hsl(210, 40%, 96%); }

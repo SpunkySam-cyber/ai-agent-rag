@@ -1,0 +1,25 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: ai-agent-db
+    plan: free
+    databaseName: ai_agent
+    user: ai_agent
+
+  # Web Service
+  - type: web
+    name: ai-agent-app
+    runtime: node
+    plan: free
+    buildCommand: npm ci && ./build.sh
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-agent-db
+          property: connectionString
+      - key: PYTHON_PATH
+        value: python3
