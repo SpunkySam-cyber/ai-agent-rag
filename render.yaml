@@ -7,7 +7,7 @@ services:
     name: ai-agent-app
     runtime: node
     plan: free
-    buildCommand: npm ci
+    buildCommand: npm run build
     startCommand: npm start
     healthCheckPath: /
     envVars:
