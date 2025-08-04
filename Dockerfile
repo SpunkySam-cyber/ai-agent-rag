@@ -30,7 +30,6 @@ COPY . .
 RUN npm run build
 
 # Copy needed Python agent scripts into the compiled output so subprocesses can find them
-# Copy needed Python agent scripts into the compiled output so subprocesses can find them
 RUN mkdir -p dist/services
 RUN cp server/services/ai-agent.py dist/services/
 RUN cp server/services/rag-service.py dist/services/
