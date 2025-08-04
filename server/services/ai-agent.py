@@ -6,7 +6,7 @@ import os
 import subprocess
 from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 import requests
 from bs4 import BeautifulSoup
 from readability import Document
