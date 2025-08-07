@@ -19,9 +19,16 @@ COPY package*.json ./
 COPY python-requirements.txt ./
 COPY pyproject.toml ./
 
+
 # Install dependencies
 RUN npm ci
+
+# 🔧 Remove broken 'readability' if it exists in cache
+RUN pip uninstall -y readability || true
+
+# Now install only what's in python-requirements.txt
 RUN python3 -m pip install -r python-requirements.txt
+
 
 # Copy rest of the code
 COPY . .
