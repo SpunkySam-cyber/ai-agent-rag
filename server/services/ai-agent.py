@@ -9,7 +9,7 @@ import torch
 from duckduckgo_search import DDGS
 import requests
 from bs4 import BeautifulSoup
-from readability import Document
+from readability.readability import Document
 import re
 import PyMuPDF as fitz  # fitz
 import time
