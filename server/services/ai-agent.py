@@ -103,15 +103,14 @@ class HybridAIAgent:
             return f"Error reading text file: {e}"
 
     def extract_main_text_from_html(self, html: str) -> str:
-        """Extract main article text from HTML using readability and BeautifulSoup"""
         try:
-            doc = Document(html)
-            soup = BeautifulSoup(doc.summary(), "html.parser")
+            soup = BeautifulSoup(html, "html.parser")
             paragraphs = soup.find_all("p")
             main_text = "\n".join(p.get_text() for p in paragraphs[:7])
             return self.clean_text(main_text)
         except Exception as e:
             return ""
+
 
     def summarize_text(self, text: str, max_new_tokens: int = 130, use_rag: bool = True) -> str:
         """Summarize text using Hugging Face summarization pipeline with optional RAG enhancement"""
