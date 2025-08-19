@@ -49,7 +49,7 @@ ENV PYTHON_PATH=python3
 ENV NODE_ENV=production
 
 # Expose (Render injects PORT)
-EXPOSE 3000
+EXPOSE 5000
 
 # Start
 CMD ["npm", "start"]
