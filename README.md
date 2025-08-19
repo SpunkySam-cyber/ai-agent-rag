@@ -38,19 +38,6 @@ A hybrid AI agent with Retrieval-Augmented Generation (RAG) capabilities that co
    npm run dev
    ```
 
-### Deploy to Render (Free)
-
-1. **Push to GitHub** (this repository)
-
-2. **Deploy to Render**
-   - Sign up at [render.com](https://render.com)
-   - Create new Blueprint
-   - Connect this GitHub repository
-   - Render automatically detects `render.yaml` and deploys
-
-3. **First startup takes 2-3 minutes** (downloading AI models)
-
-See [DEPLOY_TO_RENDER.md](./DEPLOY_TO_RENDER.md) for detailed deployment instructions.
 
 ## Architecture
 
@@ -92,10 +79,3 @@ When documents are uploaded, the system:
 - TanStack Query, Wouter
 - shadcn/ui components
 
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions welcome! Please read our contributing guidelines and submit pull requests.
