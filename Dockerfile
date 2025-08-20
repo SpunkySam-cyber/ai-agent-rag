@@ -29,6 +29,8 @@ RUN pip uninstall -y readability || true
 # Now install only what's in python-requirements.txt
 RUN python3 -m pip install -r python-requirements.txt
 
+RUN python3 -c "import fitz; print('PyMuPDF installed successfully')"
+
 
 # Copy rest of the code
 COPY . .
